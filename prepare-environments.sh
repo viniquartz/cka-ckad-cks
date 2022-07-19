@@ -28,3 +28,6 @@ echo "source <(kubectl completion bash)" >> ~/.bashrc
 #alias
 alias k=kubectl
 complete -F __start_kubectl k
+
+
+#######Configurar meu ssh para acessar meu github######
