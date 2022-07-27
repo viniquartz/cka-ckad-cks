@@ -1,0 +1,8 @@
+docker é um runtime
+
+pod é a menor entidade, vai ser onde o container onde vai rodar
+amontando de cgroups e linux namespaces
+
+multi containers no mesmo pod compartilha mema rede e mesmo volume. e sempre vao rodar no mesmo node
+
+docker ENTRYPOINT  kubernetes command 

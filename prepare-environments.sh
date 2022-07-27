@@ -8,12 +8,10 @@ curl -fsSL https://get.docker.com | bash
 
 #install kind
 echo "================== install kind ===================";
-https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
+#https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.13.0/kind-linux-amd64
 chmod +x ./kind
 mv kind /usr/local/bin
-
-kind create cluster
 
 echo "================== install kubectl ===================";
 #install kubectl
@@ -28,9 +26,6 @@ apt-get install -y kubectl
 source <(kubectl completion bash)
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-#alias
-alias k=kubectl
-complete -F __start_kubectl k
-
-
 #######Configurar meu ssh para acessar meu github######
+
+kind create cluster

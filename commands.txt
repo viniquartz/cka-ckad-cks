@@ -1,0 +1,56 @@
+-> Configure alias
+
+#alias
+# vim .bashrc
+source .bashrc
+# alias k=kubectl
+# complete -F __start_kubectl k
+
+
+-> export variable
+export d="--dry-run=client -o yaml"
+ex: kubectl run nginx --image nginx $d or kubectl run nginx --image nginx > pod.yaml
+
+
+kubectl explain -pod.spec --recursive
+editar um pod rodando
+kubectl edit pod 'meu-pod'
+
+
+kubectl replace -f pod.yaml --force
+
+kubectl exec -it pods/meu-pod -- env
+
+kubectl delete pod 'sleep' --force --grace-period 0
+
+kubectl run nginx --image nginx --port 80 --dry-run=client -o yaml > pod.yaml
+
+kubectl get pod 'nginx' -o yaml
+kubectl describe pod 'nginx'
+
+dois container em um pod. exe: nginx e redis
+kubectl exec -it 'nginx' -c 'nginx'-- bash
+
+
+kubectl get pod -o wide
+kubectl get rs -o wide
+
+kubectl describe rs 
+
+kubectl get deployment.apps,rs,pod
+
+kubectl edit deployment.apps 'primeiro-deploy'
+
+kubectl scale deployment  -replicas 5 'primeiro-deploy'
+
+kubectl rollout history deployment 'primeiro-deploy'
+kubectl describe deployment 'primeiro-deploy'
+
+->voltar versao deployment
+kubectl rollout undo --to-revision 3 deployment 'primeiro-deploy'
+
+
+kubectl rollout resume/pause deployment 'primeiro-deploy'
+
+
+ 
