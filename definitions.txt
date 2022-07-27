@@ -5,4 +5,8 @@ amontando de cgroups e linux namespaces
 
 multi containers no mesmo pod compartilha mema rede e mesmo volume. e sempre vao rodar no mesmo node
 
-docker ENTRYPOINT  kubernetes command 
+docker  ENTRYPOINT  kubernetes COMMAND
+        CMD                    ARGS
+
+controlar replicas do pod com replicaset
+deployment verifica versoes novas de pod e gerencia as replicas

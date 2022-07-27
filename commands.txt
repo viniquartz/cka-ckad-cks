@@ -52,5 +52,7 @@ kubectl rollout undo --to-revision 3 deployment 'primeiro-deploy'
 
 kubectl rollout resume/pause deployment 'primeiro-deploy'
 
+->strategy deployment: por padrao vem rollingupdate
+dentro de spec
 
  
