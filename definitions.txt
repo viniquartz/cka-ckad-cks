@@ -8,5 +8,8 @@ multi containers no mesmo pod compartilha mema rede e mesmo volume. e sempre vao
 docker  ENTRYPOINT  kubernetes COMMAND
         CMD                    ARGS
 
+ENTRYPOINT é o que vai segurar a execucao
+CMD é os argumentos
+
 controlar replicas do pod com replicaset
 deployment verifica versoes novas de pod e gerencia as replicas
