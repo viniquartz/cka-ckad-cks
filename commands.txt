@@ -131,3 +131,20 @@ rollingupdate -> permite criar strategia
       maxUnavailable: 0
 
 
+### PersisntentVolume
+PV
+    accessModes:
+      - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    hostPath:
+      path: /volume
+
+PVC
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+        
+    kubectl get pv,pvc -n day1

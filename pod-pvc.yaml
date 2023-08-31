@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+  namespace: day1
+spec:
+  volumes:
+  - name: usando-pvc
+    persistentVolumeClaim:
+      claimName: primeiro-pvc
+  containers:
+    - image: nginx
+      name: nginx
+      resources: {}
+      volumeMounts:
+        - name: usando-pvc
+          mountPath: "/data"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always

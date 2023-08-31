@@ -13,3 +13,8 @@ CMD é os argumentos
 
 controlar replicas do pod com replicaset
 deployment verifica versoes novas de pod e gerencia as replicas
+
+PV - armazenamento manualmente ou dinamicamente com storageclass, ciclo de vida independente, global
+PVC - solicatacao de armazenamento para o PV. nivel de namespace
+
+emptydir - Volume efemero - dado baseado em memoria
