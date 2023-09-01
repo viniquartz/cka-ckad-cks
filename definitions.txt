@@ -18,3 +18,9 @@ PV - armazenamento manualmente ou dinamicamente com storageclass, ciclo de vida 
 PVC - solicatacao de armazenamento para o PV. nivel de namespace
 
 emptydir - Volume efemero - dado baseado em memoria
+
+ConfigMap e Secrets
+armazenar segredos
+configmap - nao criptografado, arquivos ou itens de chave e valor
+secrets - criptografado em base64
+

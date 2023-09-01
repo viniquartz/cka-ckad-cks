@@ -146,5 +146,27 @@ PVC
     resources:
       requests:
         storage: 1Gi
-        
+
     kubectl get pv,pvc -n day1
+
+
+Visualizar configuracoes de configmap
+    kubectl get cm primeiro-cm -o yaml
+    kubectl describe cm primeiro-cm
+
+
+Comando para ver as variaveis de um pod
+    kubectl exec -it nomepod -- env
+
+visualizar volume sem entrar no coantainer
+     kubectl exec -it nginx -- ls /data
+
+criar ConfigMap
+    kubectl create configmap nameconfigmap --from-literal=ip=10.0.0.2 --from-literal=tier=web --dry-run=client -o yaml
+
+sempre criar secrets base64 com -n
+    echo -n "admin" | base64
+    echo "crip" | base64 -d
+
+criar Secrets
+    kubectl
