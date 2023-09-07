@@ -1,0 +1,24 @@
+Container Runtime Interface - CRI
+    containerD - suporta imagens docker
+    nerdctl - CLI do containerD - substitui o docker
+    critl - CLI CRI
+
+MASTER
+
+NODE
+
+ETCD cluster
+
+KUBE-SCHEDULER
+
+CONTROLLER-MANAGER
+    NODE-CONTROLLER
+
+    REPLICATION-CONTROLLER
+
+
+KUBE-APISERVER
+
+KUBELET
+
+KUBE-PROXY

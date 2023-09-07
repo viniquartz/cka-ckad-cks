@@ -1,0 +1,295 @@
+1- kubectl run ex-1 --image nginx --port 80
+kubectl run ex-1 --image nginx --port 80 --dry-run=client -o yaml > ex1.yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    creationTimestamp: null
+    labels:
+        run: ex-1
+    name: ex-1
+    spec:
+    containers:
+    - image: nginx
+        name: ex-1
+        ports:
+        - containerPort: 80
+        resources: {}
+    dnsPolicy: ClusterFirst
+    restartPolicy: Always
+    status: {}
+
+2- kubectl run ex-2 --image nginx:latest --port 80 --dry-run=client -o yaml > ex2.yaml
+kubectl apply -f ex2.yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    labels:
+        run: ex-2
+    name: ex-2
+    spec:
+    containers:
+    - image: nginx:latest
+        name: ex-2
+        ports:
+        - containerPort: 80
+        resources: {}
+    dnsPolicy: ClusterFirst
+    restartPolicy: Always
+
+3- kubectl apply -f ex3.yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    labels:
+        run: ex-3
+    name: ex-3
+    spec:
+    containers:
+    - image: nginx
+        name: ex-3-nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+    - image: redis
+        name: ex-3-redis
+        ports:
+        - containerPort: 6379
+        resources: {}
+    dnsPolicy: ClusterFirst
+    restartPolicy: Always
+
+4- kubectl get pods -n default --no-headers -o custom-columns=":metadata.name"
+
+5- kubectl get pods -n default --no-headers -o custom-columns=":metadata.name" > /tmp/pods
+
+6- kubectl exec -it ex-3 nginx -- curl 0:80
+
+7- kubectl describe pod ex-1 > /tmp/pod1
+
+8- kubectl delete pod ex-1
+
+9- kubectl delete -f ex3.yaml --force
+Warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
+pod "ex-3" force deleted
+
+10- kubectl edit pod ex-2
+-> change de image and save
+kubectl describe pod ex-2 | grep image
+  Normal  Pulling    21m                kubelet            Pulling image "nginx:latest"
+  Normal  Pulled     21m                kubelet            Successfully pulled image "nginx:latest" in 224.57887ms
+  Normal  Pulling    24s                kubelet            Pulling image "nginx:alpine"
+  Normal  Pulled     24s                kubelet            Successfully pulled image "nginx:alpine" in 261.169523ms
+
+kubectl describe pod ex-2 | grep Image
+    Image:          nginx:alpine
+    Image ID:       docker.io/library/nginx@sha256:16164a43b5faec40adb521e98272edc528e74f31c1352719132b8f7e53418d70
+
+11- kubectl describe pod -n kube-system coredns-6d4b75cb6d-56sxb | grep Image: > /tmp/core-image
+
+12- kubectl run ex-12 --image nginx --port 80
+    kubectl exec ex-12 -it -- env > /tmp/env-12
+
+    cat /tmp/env-12 
+        PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+        HOSTNAME=ex-12
+        NGINX_VERSION=1.25.2
+        NJS_VERSION=0.8.0
+        PKG_RELEASE=1~bookworm
+        KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+        KUBERNETES_SERVICE_HOST=10.96.0.1
+        KUBERNETES_SERVICE_PORT=443
+        KUBERNETES_SERVICE_PORT_HTTPS=443
+        KUBERNETES_PORT=tcp://10.96.0.1:443
+        KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+        KUBERNETES_PORT_443_TCP_PROTO=tcp
+        KUBERNETES_PORT_443_TCP_PORT=443
+        TERM=xterm
+        HOME=/root
+
+13- kubectl run ex-13 --image nginx --port 80 --env=tier=web --env=environment=dev
+    kubectl exec ex-13 -it -- env > /tmp/env-13
+
+    cat /tmp/env-13 
+        PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+        HOSTNAME=ex-13
+        NGINX_VERSION=1.25.2
+        NJS_VERSION=0.8.0
+        PKG_RELEASE=1~bookworm
+        tier=web
+        environment=dev
+        KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+        KUBERNETES_SERVICE_HOST=10.96.0.1
+        KUBERNETES_SERVICE_PORT=443
+        KUBERNETES_SERVICE_PORT_HTTPS=443
+        KUBERNETES_PORT=tcp://10.96.0.1:443
+        KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+        KUBERNETES_PORT_443_TCP_PROTO=tcp
+        KUBERNETES_PORT_443_TCP_PORT=443
+        TERM=xterm
+        HOME=/root
+
+14- 
+
+
+15- kubectl apply -f ex-15.yaml
+    cat ex-15.yaml 
+        apiVersion: v1
+        kind: Pod
+        metadata:
+        labels:
+            run: ex-14
+        name: ex-14
+        spec:
+        containers:
+        - image: busybox
+            name: ex-14
+            command: ["/bin/sh"]
+            #args: ["-c", "sleep 3600"]
+            args: ["-c", "sleep 3600"]
+            resources: {}
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+
+    kubectl exec ex-15 -it -- sh
+    ps aux
+        PID   USER     TIME  COMMAND
+        1 root      0:00 /bin/sh -c sleep 3600
+        32 root      0:00 sh
+        42 root      0:00 ps aux
+
+16- kubectl delete pods -n default --all
+
+17- kubectl apply -f ex17.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+kubectl get deploy,rs,pod
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/deploy-1   1/1     1            1           65s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/deploy-1-6c8b449b8f   1         1         1       65s
+
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/deploy-1-6c8b449b8f-rqrnt   1/1     Running   0          65s
+
+18- kubectl get deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+deploy-1   1/1     1            1           2m39s
+
+19- kubectl edit deployment deploy-1
+
+20- kubectl get rs
+NAME                  DESIRED   CURRENT   READY   AGE
+deploy-1-547dd98c74   1         1         1       22m
+deploy-1-6c8b449b8f   0         0         0       26m
+
+21- kubectl set image deployment/deploy-1 nginx=nginx:latest
+or edit and then update revision cause
+kubectl annotate deployment/deploy-1 kubernetes.io/change-cause="nginx latest"
+
+22- kubectl rollout undo --to-revision 1 deployment deploy-1
+
+23- kubectl describe deployment.apps/deploy-1 | grep Image > /tmp/deploy-image
+cat /tmp/deploy-image 
+    Image:        nginx
+
+24- kubectl scale --replicas=5 deployment/deploy-1
+
+25- kubectl edit deployment deploy-1
+
+26- kubectl rollout pause deployment deploy-1
+deployment.apps/deploy-1 paused
+
+27- kubectl set image deployment/deploy-1 nginx=nginx:alpine
+deployment.apps/deploy-1 image updated
+
+28- kubectl rollout resume deployment deploy-1
+deployment.apps/deploy-1 resumed
+
+29- kubectl describe pod/deploy-1-547dd98c74-r96cj | grep Image > /tmp/deploy-image-pause
+root@cka-1:~# cat /tmp/deploy-image-pause 
+    Image:          nginx:alpine
+    Image ID:       docker.io/library/nginx@sha256:16164a43b5faec40adb521e98272edc528e74f31c1352719132b8f7e53418d70
+
+30- kubectl apply -f deploy30.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-30
+  labels:
+    app: web
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: nginx
+        ports:
+        - containerPort: 80
+        env:
+        - name: tier
+          value: web
+        - name: environment
+          value: prod
+      - name: sleep
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 3600;done"]
+
+31- kubectl delete deployments -n default --all
+
+32-  
+33-
+34-
+35-
+36-
+37-
+38-
+
+
+
+
+
+
+1- passo: advogados
+nao tem projeto definido
+visto d2 ou t2 - recibos verdes - contrato de prestacao de servico 1 ano. menos impostos e mais retorno IR.
+primeiro mes, já recebe.
+
+2800 base
+2100 - 2240
+seguro de saude
+750 alojamento - reembolso
+aulas de ingles gratis
+
+6 a 9 meses - sem visto de trabalho - reagrupamento familiar
+Visto deve ser pago por mim - 150 euros
+levar 5 mil euros

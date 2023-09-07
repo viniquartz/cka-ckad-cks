@@ -124,6 +124,7 @@ kubectl get deployments.apps,rs,pod
 recreate -> recria de forma abrupta
     strategy:
       type: Recreate
+
 rollingupdate -> permite criar strategia
     type: RollingUpdate
     rollingUpdate:
@@ -169,4 +170,26 @@ sempre criar secrets base64 com -n
     echo "crip" | base64 -d
 
 criar Secrets
-    kubectl
+    kubectl create secret generic segunda-secret --from-literal=user=admin --from-literal=pass=senhasegura
+
+### SELECIONAR CAMPOS DE SAIDA
+    kubectl get pods --no-headers -o custom-columns=":metadata.name"
+
+## TESTAR CONTAINER
+    quando tem dois container no mesmo pod
+    kubectl exec -it ex-3(nome pod) nginx(nome container) -- curl 0:80
+
+para ver todos os pods em todas namespace
+    kubectl get pods -A
+
+criar pod com variaveis de ambiente
+    kubectl run ex-13 --image nginx --port 80 --env=tier=web --env=environment=dev
+    - env:
+        - name: tier
+        value: web
+        - name: environment
+        value: dev
+
+## Scale
+comando para alterar replicas
+    kubectl scale --replicas=3 deployment/deploy-1
