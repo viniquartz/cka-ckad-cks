@@ -193,3 +193,4 @@ criar pod com variaveis de ambiente
 ## Scale
 comando para alterar replicas
     kubectl scale --replicas=3 deployment/deploy-1
+

@@ -266,19 +266,424 @@ spec:
 
 31- kubectl delete deployments -n default --all
 
-32-  
-33-
-34-
-35-
-36-
-37-
-38-
+32- kubectl create configmap env-configs --from-literal=ip=10.0.0.1 --from-literal=SERVER=nginx --dry-run=client -o yaml > ex32.yaml
+
+33- kubectl get configmap
+
+34- kubectl describe configmap env-configs > /tmp/configmap
+cat /tmp/configmap 
+    Name:         env-configs
+    Namespace:    default
+    Labels:       <none>
+    Annotations:  <none>
+
+    Data
+    ====
+    ip:
+    ----
+    10.0.0.1
+    SERVER:
+    ----
+    nginx
+
+    BinaryData
+    ====
+
+    Events:  <none>
+
+35- kubectl create configmap env-configs-kubectl --from-literal=tier=web --from-literal=server=homolog
+
+36- kubectl apply -f ex36.yaml 
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    name: ex-cm-pod1
+    spec:
+    containers:
+    - name: ex-cm-pod1
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /data
+            name: env-configs-k
+    volumes:
+        - name: env-configs-k
+        configMap:
+            name: env-configs-kubectl
+
+to verify->
+kubectl exec -it ex-cm-pod1 -- ls /data
+
+37- kubectl replace -f ex36.yaml --force
+
+cat ex37.yaml 
+    apiVersion: v1
+    kind: Pod
+    metadata:
+        name: ex-cm-pod1
+    spec:
+        containers:
+        - name: ex-cm-pod1
+            image: nginx
+            ports:
+            - containerPort: 80
+            volumeMounts:
+            - mountPath: /data
+                name: env-configs-k
+        volumes:
+            - name: env-configs-k
+            configMap:
+                name: env-configs-kubectl
+                items:
+                - key: tier
+                path: ambiente.conf
+
+
+to verify-> 
+kubectl exec -it ex-cm-pod1 -- ls /data
+    ambiente.conf
+
+kubectl exec -it ex-cm-pod1 -- cat /data/ambiente.conf
+    web
+
+38- kubectl apply -f ex38.yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    name: ex-cm-pod1
+    spec:
+    containers:
+    - name: ex-cm-pod1
+        image: nginx
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: env-configs-kubectl
+
+to verify->
+kubectl exec -it ex-cm-pod1 -- env
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    HOSTNAME=ex-cm-pod1
+    NGINX_VERSION=1.25.2
+    NJS_VERSION=0.8.0
+    PKG_RELEASE=1~bookworm
+    server=homolog
+    tier=web
+    KUBERNETES_SERVICE_HOST=10.96.0.1
+    KUBERNETES_SERVICE_PORT=443
+    KUBERNETES_SERVICE_PORT_HTTPS=443
+    KUBERNETES_PORT=tcp://10.96.0.1:443
+    KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+    KUBERNETES_PORT_443_TCP_PROTO=tcp
+    KUBERNETES_PORT_443_TCP_PORT=443
+    KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+    TERM=xterm
+    HOME=/root
+
+39- kubectl apply -f ex39.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ex-cm-pod1
+spec:
+  containers:
+  - name: ex-cm-pod1
+    image: nginx
+    ports:
+    - containerPort: 80
+    env:
+    - name: ENVIRONMENT
+      valueFrom:
+        configMapKeyRef:
+          name: env-configs-kubectl
+          key: server
+
+kubectl exec -it ex-cm-pod1 -- env
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    HOSTNAME=ex-cm-pod1
+    NGINX_VERSION=1.25.2
+    NJS_VERSION=0.8.0
+    PKG_RELEASE=1~bookworm
+    ENVIRONMENT=homolog
+    KUBERNETES_SERVICE_PORT_HTTPS=443
+    KUBERNETES_PORT=tcp://10.96.0.1:443
+    KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+    KUBERNETES_PORT_443_TCP_PROTO=tcp
+    KUBERNETES_PORT_443_TCP_PORT=443
+    KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+    KUBERNETES_SERVICE_HOST=10.96.0.1
+    KUBERNETES_SERVICE_PORT=443
+    TERM=xterm
+    HOME=/root
+
+40- kubectl edit configmap env-configs-kubectl
+configmap/env-configs-kubectl edited
+
+kubectl replace -f ex39.yaml --force
+    pod "ex-cm-pod1" deleted
+    pod/ex-cm-pod1 replaced
+
+kubectl exec -it ex-cm-pod1 -- env
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    HOSTNAME=ex-cm-pod1
+    NGINX_VERSION=1.25.2
+    NJS_VERSION=0.8.0
+    PKG_RELEASE=1~bookworm
+    ENVIRONMENT=prod
+    KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+    KUBERNETES_SERVICE_HOST=10.96.0.1
+    KUBERNETES_SERVICE_PORT=443
+    KUBERNETES_SERVICE_PORT_HTTPS=443
+    KUBERNETES_PORT=tcp://10.96.0.1:443
+    KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+    KUBERNETES_PORT_443_TCP_PROTO=tcp
+    KUBERNETES_PORT_443_TCP_PORT=443
+    TERM=xterm
+    HOME=/root
+
+41- kubectl edit configmap env-configs-kubectl
+configmap/env-configs-kubectl edited
+
+kubectl get configmap env-configs-kubectl -o yaml
+apiVersion: v1
+data:
+  server: prod
+  tier: web
+immutable: true
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2023-09-07T18:44:36Z"
+  name: env-configs-kubectl
+  namespace: default
+  resourceVersion: "169121"
+  uid: e68d7d3e-8f6d-4700-80f4-b4a9261c36d8
+
+42- kubectl delete pod -n default --all
+    kubectl delete configmap -n default --all
+
+43- kubectl apply -f ex43.yaml
+
+echo -n "superadmin" | base64
+    c3VwZXJhZG1pbg==
+echo -n "minhasenhasupersegura" | base64
+    bWluaGFzZW5oYXN1cGVyc2VndXJh
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-secret
+data:
+  user: c3VwZXJhZG1pbg==
+  pass: bWluaGFzZW5oYXN1cGVyc2VndXJh
+
+44- kubectl get secret user-secret
+kubectl describe  secret user-secret
+    Name:         user-secret
+    Namespace:    default
+    Labels:       <none>
+    Annotations:  <none>
+
+    Type:  Opaque
+
+    Data
+    ====
+    pass:  21 bytes
+    user:  10 bytes
+
+45- 
+kubectl get secret user-secret --no-headers -o custom-columns=":data.user" >> /tmp/secret
+kubectl get secret user-secret --no-headers -o custom-columns=":data.pass" >> /tmp/secret
+cat /tmp/secret 
+    c3VwZXJhZG1pbg==
+    bWluaGFzZW5oYXN1cGVyc2VndXJh
+kubectl get secret user-secret --no-headers -o custom-columns=":data.user" | base64 -d >> /tmp/decrypt
+kubectl get secret user-secret --no-headers -o custom-columns=":data.pass" | base64 -d >> /tmp/decrypt
+cat /tmp/decrypt
+    superadmin
+    minhasenhasupersegura
+
+46- kubectl create secret generic user-secret-kubectl --from-literal=user=bmV3dXNlcgo= --from-literal=pass=YWdvcmFlc2VndXJhZW0K
+
+47- kubectl apply -f ex47.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ex-secret-pod1
+spec:
+  containers:
+    - name: ex-secret-pod1
+      image: nginx
+      ports:
+      - containerPort: 80
+      volumeMounts:
+        - mountPath: /secret
+          name: secret-volume
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: user-secret-kubectl
+
+kubectl exec -it ex-secret-pod1 -- ls /secret
+    pass  user
+
+48- kubectl apply -f ex48.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ex-secret-pod1
+spec:
+  containers:
+    - name: ex-secret-pod1
+      image: nginx
+      ports:
+      - containerPort: 80
+      volumeMounts:
+        - mountPath: /secret
+          name: secret-volume
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: user-secret-kubectl
+        items:
+        - key: user
+          path: user.conf
+
+kubectl exec -it ex-secret-pod1 -- ls /secret
+    user.conf
+kubectl exec -it ex-secret-pod1 -- cat /secret/user.conf
+    bmV3dXNlcgo=
+
+49- kubectl apply -f ex49.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ex-secret-pod1
+spec:
+  containers:
+    - name: ex-secret-pod1
+      image: nginx
+      ports:
+      - containerPort: 80
+      envFrom:
+        - secretRef:
+            name: user-secret-kubectl
+
+kubectl exec -it ex-secret-pod1 -- env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ex-secret-pod1
+NGINX_VERSION=1.25.2
+NJS_VERSION=0.8.0
+PKG_RELEASE=1~bookworm
+pass=YWdvcmFlc2VndXJhZW0K
+user=bmV3dXNlcgo=
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+TERM=xterm
+HOME=/root
+
+50- kubectl apply -f ex50.yaml 
+pod/ex-secret-pod1 created
+
+cat ex50.yaml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ex-secret-pod1
+spec:
+  containers:
+    - name: ex-secret-pod1
+      image: nginx
+      ports:
+      - containerPort: 80
+      env:
+      - name: SENHA
+        valueFrom:
+          secretKeyRef:
+            key: pass
+            name: user-secret-kubectl
+
+kubectl exec -it ex-secret-pod1 -- env
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ex-secret-pod1
+NGINX_VERSION=1.25.2
+NJS_VERSION=0.8.0
+PKG_RELEASE=1~bookworm
+SENHA=YWdvcmFlc2VndXJhZW0K
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+TERM=xterm
+HOME=/root
+
+51- echo "minhanovasenhasegura" | base64
+bWluaGFub3Zhc2VuaGFzZWd1cmEK
+
+kubectl edit secret user-secret-kubectl
+secret/user-secret-kubectl edited
+
+kubectl replace -f ex50.yaml --force
+pod "ex-secret-pod1" deleted
+pod/ex-secret-pod1 replaced
+
+kubectl exec -it ex-secret-pod1 -- env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ex-secret-pod1
+NGINX_VERSION=1.25.2
+NJS_VERSION=0.8.0
+PKG_RELEASE=1~bookworm
+SENHA=minhanovasenhasegura
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+TERM=xterm
+HOME=/root
+
+52- kubectl edit secret user-secret-kubectl
+secret/user-secret-kubectl edited
+
+kubectl get secret user-secret-kubectl -o yaml
+
+apiVersion: v1
+data:
+  pass: bWluaGFub3Zhc2VuaGFzZWd1cmEK
+  user: Ym1WM2RYTmxjZ289
+immutable: true
+kind: Secret
+metadata:
+  creationTimestamp: "2023-09-07T20:12:24Z"
+  name: user-secret-kubectl
+  namespace: default
+  resourceVersion: "175670"
+  uid: 555f4b1f-070c-41f0-bd31-c36a7f9d87dd
+type: Opaque
 
 
 
-
-
-
+==============//================//===============//===============/================//===============
 1- passo: advogados
 nao tem projeto definido
 visto d2 ou t2 - recibos verdes - contrato de prestacao de servico 1 ano. menos impostos e mais retorno IR.
