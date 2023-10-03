@@ -62,10 +62,15 @@ kubectl apply -f ex2.yaml
     restartPolicy: Always
 
 4- kubectl get pods -n default --no-headers -o custom-columns=":metadata.name"
+kubectl get pod -o name
 
 5- kubectl get pods -n default --no-headers -o custom-columns=":metadata.name" > /tmp/pods
 
 6- kubectl exec -it ex-3 nginx -- curl 0:80
+kubectl exec -it ex-3 -c ex-3 -- bash
+  curl -v telnet://0:63779
+  PING
+kubectl exec -it ex-3 -c ex-3 -- curl -v telnet://0:6379 > /tmp/connection
 
 7- kubectl describe pod ex-1 > /tmp/pod1
 
@@ -74,6 +79,8 @@ kubectl apply -f ex2.yaml
 9- kubectl delete -f ex3.yaml --force
 Warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
 pod "ex-3" force deleted
+
+kubectl delete -f ex3.yaml --force --grace-period 0
 
 10- kubectl edit pod ex-2
 -> change de image and save
@@ -131,10 +138,13 @@ kubectl describe pod ex-2 | grep Image
         TERM=xterm
         HOME=/root
 
-14- 
+14- kubectl run ex-14 --image busybox -- sleep 3600
 
 
-15- kubectl apply -f ex-15.yaml
+15- kubectlexec -it ex-15 -- sh
+id
+
+kubectl apply -f ex-15.yaml
     cat ex-15.yaml 
         apiVersion: v1
         kind: Pod
@@ -162,7 +172,10 @@ kubectl describe pod ex-2 | grep Image
 
 16- kubectl delete pods -n default --all
 
-17- kubectl apply -f ex17.yaml
+17- kubectl create deployment deploy-1 --image nginx --port 80 
+
+kubectl apply -f ex17.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -196,6 +209,9 @@ pod/deploy-1-6c8b449b8f-rqrnt   1/1     Running   0          65s
 18- kubectl get deploy
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
 deploy-1   1/1     1            1           2m39s
+
+kubectl get deployment.apps --show-labels
+kubectl get rs -l app=deploy1
 
 19- kubectl edit deployment deploy-1
 
@@ -261,6 +277,9 @@ spec:
           value: prod
       - name: sleep
         image: busybox
+        #args:
+        #- sleep
+        #- "3600"
         command: ["/bin/sh"]
         args: ["-c", "while true; do echo hello; sleep 3600;done"]
 
@@ -698,3 +717,24 @@ aulas de ingles gratis
 6 a 9 meses - sem visto de trabalho - reagrupamento familiar
 Visto deve ser pago por mim - 150 euros
 levar 5 mil euros
+
+
+
+
+Leilao
+===============================
+pre rematacao
+investigar - 
+  quem? processos? matricula, vinculo judicial
+  nivel afetivo
+  nivel investimento
+
+
+pos remetacao
+  ocupado: negociacao
+  interpretar o caso
+    ????valor imissao? 3 mil 
+    registrar
+    notificacao? tentar conversa
+    entrar com processo
+    boa conversa vale mais do que qualquer briga
