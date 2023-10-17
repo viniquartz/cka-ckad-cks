@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-pod-a
+spec:
+  podSelector:
+    matchLabels:
+      run: pod-a
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          run: pod-c
+    ports:
+    - protocol: TCP
+      port: 80

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: meu-servico-node
+spec:
+  type: NodePort
+  selector:
+    run: nginx
+  ports:
+  - port: 8080
+    targetPort: 80
+    nodePort: 30080 #Se nao setar, gera automatico 

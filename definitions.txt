@@ -24,3 +24,30 @@ armazenar segredos
 configmap - nao criptografado, arquivos ou itens de chave e valor
 secrets - criptografado em base64
 
+
+NETWORK
+Ser acessivel interno e externamente e tambem ser load balancer
+
+        ClusterIP: Default, endereço interno, só é acessivel dentro do cluster.
+
+        NodePort: ClusterIP + uma porta, com a porta pode ser acessado externamente 30000-32767
+
+        LoadBalancer: precisa de um agente externo, geralmente cloud manager(gerenciado pelo cloud provider) faz integracao para criar
+
+        ExternalName: cname para algo que existe fora do cluster
+
+NETWORK POLICY
+
+Controlar trafego entre pods, como se fosse uma acl/security group
+
+        Ingress = entrada - from
+        Egress = saida - to -> cuidar dns - regra de saida tcp e udp 53 + namespcace kubesystem
+
+        podSelector
+        namespaceSelector
+        IPBlock
+
+        em outro nivel - = or
+        no mesmo nivel   = and
+
+

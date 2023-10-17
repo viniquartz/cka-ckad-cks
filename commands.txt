@@ -196,3 +196,22 @@ comando para alterar replicas
 
 # show labels
 kubectl get deployment.apps --show-labels
+
+
+# NETWORK
+-> rede de serviço
+kubectl cluster-info dump | grep service-cluster-ip-range
+
+-> rede do cluster
+kubectl cluster-info dump | grep 10.44.0.0/14
+
+criar svc usando expose
+kubectl expose pod nginx --name=svc2 --type=ClusterIP --port=8080 --target-port=80 --dry-run=client -o yaml
+
+
+Comando para mostrar as labels
+    -> kubectl get pod --show-labels
+
+
+Network POLICY
+    -> kubectl get networkpolicies.networking.k8s.io
