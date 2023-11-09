@@ -50,4 +50,19 @@ Controlar trafego entre pods, como se fosse uma acl/security group
         em outro nivel - = or
         no mesmo nivel   = and
 
+INGRESS
 
+
+
+
+RBAC
+
+Modo de acesso, autenticacao e autorizacao
+cat /etc/kuberntes/manifests/kube-apiserver.yaml
+--authorization-mode=Node,RBAC
+
+Metodo:
+        Cluster Role - global
+        Role - aplicado em cada namespace
+
+Nao é possivel criar regras de negacao
