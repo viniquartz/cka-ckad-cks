@@ -235,3 +235,14 @@ RBAC
         kubectl create rolebindings --help
         - kubectl create rolebinding binding2 --role=leitor-secrets --serviceaccount:default:leitor
         - kubectl create clusterrolebinding binding-cr --role=leitor-secrets --serviceaccount:default:leitor-global
+
+
+RESOURCES - LIMIT RANGE - QUOTAS
+
+kubectl get node
+kubectl describe no node
+    -> ver a capacidade do node
+    request = pode ser ultrapassado / limit = nao pode ser ultrapassado
+
+LIMIT RANGE -> definir o minimo e o maximo que cada pode vai poder ter e limite para o storage
+
