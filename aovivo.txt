@@ -1,0 +1,48 @@
+1 - Criar o namespace "aovivo" com a label cka=true 
+2 - Crie um deployment "ex2" com 2 containers: 
+    1 - Imagem Nginx 
+    2 - Imagem Redis 
+3 - Teste a comunicação entre os containers 
+4 - Crie um serivco
+5 - Crie uma service account = prover uma identidade ao pod em execucao
+6 - Altere a service account "aovivo" do deployment 2
+7 - Crie um RBAC permitindo listar os pods no namespace "aovivo", adicione essa permissão para a SA criada no exercicio 5 e faça o teste utilizando o deployment criado no exercicio 2
+
+======//===========//===========
+1-
+kubectl create namespace aovivokubectl edit
+kubectl get ns --show-labels
+
+
+2-
+kubectl create deployment ex2 --image nginx --dry-run=client -o yaml > ex2.yaml
+vim ex2.yaml
+kubectlapply -f ex2.yaml -n aovivo
+
+kubectl get deployments.apps -n aovivo -w
+
+3-
+kubectl get pod -n aovivo
+kubectl exec "pod" -it -c nginx -n aovivo -- bash
+curl -v telnet://0:6379
+
+4-
+kubectl expose serviceex2 deployment -n aovivo ex2 --type NodePort --port 8080 --target-port 80
+kubectl get svc -n aovivo
+
+5-
+kubectl create sa sa-aovivo -n aovivo 
+kubectl get sa -n aovivo
+
+6-
+edit ex2.yaml
+em spec:
+    serviceAccountName: "aovivo" = na mesma altura de container
+
+7-
+kubectl create role -n aovivo listpods --resource pod --verb list
+kubectl create rolebinding -n aovivo listb --role listpods --serviceaccount aovivo:sa-aovivo
+
+kubectl get po -n aovivo
+kubectl exec -it "pod" -c nginx -n aovivo -- bash
+curl -k https://
