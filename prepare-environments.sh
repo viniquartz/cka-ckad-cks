@@ -15,16 +15,26 @@ mv kind /usr/local/bin
 
 echo "================== install kubectl ===================";
 #install kubectl
-curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
-echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 
-apt-get update
-apt-get install -y kubectl
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+
+# no root user ->   # sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+                    # sudo chmod +x kubectl
+                    # sudo mkdir -p ~/.local/bin
+                    # sudo mv ./kubectl ~/.local/bin/kubectl
+
+
+kubectl version --client --output=yaml
 
 #autocomplet
-source <(kubectl completion bash)
-echo "source <(kubectl completion bash)" >> ~/.bashrc
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+echo 'alias k=kubectl' >>~/.bashrc
+echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
+
+source ~/.bashrc
 
 #######Configurar meu ssh para acessar meu github######
 
