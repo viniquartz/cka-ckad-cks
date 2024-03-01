@@ -1,3 +1,0 @@
-pagar apagar todas as linhas
-    ESC -> :1,$d ENTER
-

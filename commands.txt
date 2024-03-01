@@ -206,8 +206,10 @@ kubectl cluster-info dump | grep service-cluster-ip-range
 kubectl cluster-info dump | grep 10.44.0.0/14
 
 criar svc usando expose
-kubectl expose pod nginx --name=svc2 --type=ClusterIP --port=8080 --target-port=80 --dry-run=client -o yaml
+kubectl expose pod nginx --name=svc2 --type=ClusterIP --port=8080 --target-port=80 --dry-run=client -o yaml > svc.yaml
 
+#node port é criado dinamicamente
+kubectl expose pod nginx --name=svc2 --type=NodePort --port=8080 --target-port=80 --dry-run=client -o yaml > svc-node.yaml
 
 Comando para mostrar as labels
     -> kubectl get pod --show-labels
@@ -240,9 +242,9 @@ RBAC
 RESOURCES - LIMIT RANGE - QUOTAS
 
 kubectl get node
-kubectl describe no node
+kubectl describe node
     -> ver a capacidade do node
     request = pode ser ultrapassado / limit = nao pode ser ultrapassado
 
-LIMIT RANGE -> definir o minimo e o maximo que cada pode vai poder ter e limite para o storage
+LIMIT RANGE -> definir o minimo e o maximo que cada pod vai poder ter e limite para o storage
 

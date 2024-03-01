@@ -50,10 +50,6 @@ Controlar trafego entre pods, como se fosse uma acl/security group
         em outro nivel - = or
         no mesmo nivel   = and
 
-INGRESS
-
-
-
 
 RBAC
 
@@ -66,3 +62,15 @@ Metodo:
         Role - aplicado em cada namespace
 
 Nao é possivel criar regras de negacao
+
+RESOURCES - LIMIT RANGE - QUOTAS
+
+1 CPU == 1000m \ se quiser colocar meia cpu seria 0.5 ou 500m
+memory em megabytes ou gigabytes == Mi ou Gi
+
+requests -> fracao que vamos reservar para nosso pod tanto de cpu quanto de memoria.
+limit -> é o teto que nosso recurso vai poder utilizar
+
+requests pode ser ultrapassado o limit nao, quando chega no limit o k8s mata o pod, se for em cpu ele enfilera os processos.
+
+

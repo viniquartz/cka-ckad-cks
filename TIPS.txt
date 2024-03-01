@@ -1,0 +1,15 @@
+###### VIM ########
+
+pagar apagar todas as linhas
+    ESC -> :1,$d ENTER
+
+
+###### KUBECTL ######
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+echo 'alias k=kubectl' >>~/.bashrc
+echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
+
+source ~/.bashrc
+alias k=kubectl
+export d="--dry-run=client -o yaml"
+export fp="--force --grace-period 0"
