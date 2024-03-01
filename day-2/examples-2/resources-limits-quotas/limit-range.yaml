@@ -5,6 +5,10 @@ metadata:
   name: limit
 spec:
   limits:
+  # - default:
+  #     memory: 512Mi
+  #   defaultRequest:
+  #     memory: 256Mi
   - max:
       cpu: "500m"
     min:

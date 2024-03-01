@@ -248,3 +248,6 @@ kubectl describe node
 
 LIMIT RANGE -> definir o minimo e o maximo que cada pod vai poder ter e limite para o storage
 
+QUOTA
+kubectl create quota quota2 --hard pod=2,cpu=1,memory=1Gi --dry-run=client - o yaml
+kubectl describe resourcequotas quota

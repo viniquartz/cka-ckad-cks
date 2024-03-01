@@ -74,3 +74,9 @@ limit -> é o teto que nosso recurso vai poder utilizar
 requests pode ser ultrapassado o limit nao, quando chega no limit o k8s mata o pod, se for em cpu ele enfilera os processos.
 
 
+LIMIT RANGE -> definir o minimo e o maximo que cada pod vai poder ter e limite para o storage
+
+
+QUOTAS
+-> Controlar o uso geral de recursos dentro do namespace
+cpu, memory, storage, objetos de criacao
