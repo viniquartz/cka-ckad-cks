@@ -1,0 +1,11 @@
+az login --tenant 2552c9cd-c783-4cf3-a4fe-8d7a0ed53db7
+az account set --subscription "ba2cdcb9-9baf-4c89-a5ad-77058a3e4f3c"
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/ba2cdcb9-9baf-4c89-a5ad-77058a3e4f3c"
+
+export ARM_CLIENT_ID=
+export ARM_CLIENT_SECRET=
+export ARM_SUBSCRIPTION_ID=
+export ARM_TENANT_ID=
+
+terraform plan -destroy -var-file=/Users/I573513/Documents/personal/cka-ckad-cks/iac/config/default.tfvars -out state.tfplan
+terraform plan -var-file=/Users/I573513/Documents/personal/cka-ckad-cks/iac/config/default.tfvars -out state.tfplan

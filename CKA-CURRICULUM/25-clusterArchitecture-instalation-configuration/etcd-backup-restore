@@ -1,0 +1,60 @@
+DOC=https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
+
+Banco de dados -> baseado e chave e valor
+    Responsavel por salvar todas as configuracoes e estados do k8s
+    ele é um pod que roda no cluster
+
+    Exige um nivel de autenticacao
+        certificado e chave
+            - identificar chaves
+                cd /etc/kubernetes/manifests/
+                cat etcd.yaml
+                - identificar o endpoint
+                - identificar a peer-trusted-ca-file
+                - identificar cert-file
+                - identificar chave do certificado key-file
+
+    Definir a API e fazer o backuo
+        export ETCDCTL_API=3
+        passar uma variavel de ambiente para o comando etcd
+        ETCDCTL_API=3 etcdctl snapshot save #--help
+        ETCDCTL_API=3 etcdctl snapshot save --endpoints= --cacert= --cert= --key= "/path/backup.db"
+
+    Verificar o backup
+        ETCDCTL_API=3 etcdctl --write-out=table snapshot status "/path/backup.db" #Deprecated
+        etcdutl --write-out=table snapshot status "/path/backup.db"
+
+    Restaurar o backup
+        ETCDCTL_API=3 etcdctl snapshot restore --data-dir=/var/lib/etcd-backup /path/backup.db #Deprecated
+        etcdutl snapshot restore --data-dir=/var/lib/etcd-backup /path/backup.db #Deprecated
+        como fazer para o etcd usar nosso diretorio de backup
+            cd /var/lib & ls #para ver o diretorio criado
+            vim /etc/kubernetes/manifests/etcd.yaml
+            trocar o - hostPath: path: /var/lib/etcd-backup
+        reiniciar o kubelet
+            systemctl stop kubelet
+            systemctl start kubelet
+
+    ---------------> OUTRO CENARIO DE BACKUP - CASO TENHAMOS PROBLEMAS COM O etcdctl_api <----------------
+    usar o container do etcd para fazer o backup
+        kubectl get pod -A #Pegar o nome do container #-n kube-system
+        kubectl exec -it container-name -n kube-system -- etcdctl #verificar se é possivel executar o comando
+        # Vamos salvar no volume do container etcd
+        kubectl exec -it container-name -n kube-system -- etcdctl snapshot save --endpoints= --cacert= --cert= --key= "/MounthPathContainerETCD/backup.db"
+
+
+-----> Troubleshooting and useful commands <-------------
+    # etcd members
+        ETCDCTL_API=3 etcdctl --endpoints 10.2.0.9:2379 \
+        --cert=/etc/kubernetes/pki/etcd/server.crt \
+        --key=/etc/kubernetes/pki/etcd/server.key \
+        --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+        member list
+
+    # health endpoints
+    etcdctl --endpoints=localhost:2379,localhost:22379,localhost:32379 endpoint health
+
+    # etcd version
+    curl http://localhost:2379/version
+    curl http://localhost:22379/version
+    curl http://localhost:32379/version

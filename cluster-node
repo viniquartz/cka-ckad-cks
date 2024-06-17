@@ -1,0 +1,45 @@
+Carregar dois modulos de kernel
+
+modprobe overlay
+modprobe br_netfilter
+
+    carregar modulos quando reiniciar
+    vim /etc/modules-load.d/k8s.conf
+        overlay
+        br_netfilter
+
+lsmod | grep br_netfilter
+lsmod | grep overlay
+
+mudar parametros no SO para habilitar o ip forwarding
+    vim /etc/sysctl.d/k8s.conf
+        net.bridge.bridge-nf-call-iptables  = 1
+        net.bridge.bridge-nf-call-ip6tables = 1
+        net.ipv4.ip_forward                 = 1
+
+sysctl --system
+
+sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
+
+runtime == containerd
+apt-get install containerd -y
+
+mkdir -p /etc/containerd
+containerd config default > /etc/containerd/config.toml
+systemctl status containerd.service
+systemctl restart containerd
+
+
+->>>>>> CLUSTER
+
+kubeadm init
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+gerar token para adicionar node
+kubeadm token create --print-join-command
+
+->>>>>> NodePort
+
+

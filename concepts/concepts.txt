@@ -8,16 +8,26 @@ MASTER
 NODE
 
 ETCD cluster
+    banco de dados de chave e valor que salvar todas as informacoes e estados.
+    é um container criado pelo cluster
 
 KUBE-SCHEDULER
+    decide em qual node vai o pod
+        filter nodes
+        rank nodes
 
 CONTROLLER-MANAGER
-    NODE-CONTROLLER
-
-    REPLICATION-CONTROLLER
+    gerencia os container
 
 
 KUBE-APISERVER
+    interage diretamente com o banco de dados   
+    principal componente de gestao
+        authenticate
+        validate request
+        retrieve data
+        scheduler
+        kubelet
 
 KUBELET
 
