@@ -34,7 +34,6 @@ variable "sg_id" {
 variable "vms" {
   default = {
     vm_name       = "cka-cluster",
-    vm_size       = "Standard_B2s",
-    disk_capacity = 256
+    vm_size       = "Standard_B2ms",
   }
 }

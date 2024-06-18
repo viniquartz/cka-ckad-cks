@@ -19,7 +19,6 @@ module "compute" {
 
   vm_name             = var.vms.vm_name
   vm_size             = var.vms.vm_size
-  disk_capacity       = var.vms.disk_capacity
   resource_group_name = module.rg.resource_group_name
   location            = var.location
   subnet_id           = module.network.subnet_id
