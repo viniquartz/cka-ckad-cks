@@ -20,15 +20,19 @@ variable "sg_id" {
 }
 
 #module compute
-variable "vm_name" {
+variable "vm_name_cluster" {
   default = ""
 }
 
-variable "vm_size" {
+variable "vm_size_cluster" {
   default = ""
 }
 
-variable "disk_capacity" {
+variable "vm_name_node" {
+  default = ""
+}
+
+variable "vm_size_node" {
   default = ""
 }
 

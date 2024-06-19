@@ -17,8 +17,10 @@ module "network" {
 module "compute" {
   source = "./modules/compute"
 
-  vm_name             = var.vms.vm_name
-  vm_size             = var.vms.vm_size
+  vm_name_cluster     = var.vm_cluster.vm_name
+  vm_size_cluster     = var.vm_cluster.vm_size
+  vm_name_node        = var.vm_node.vm_name
+  vm_size_node        = var.vm_node.vm_size
   resource_group_name = module.rg.resource_group_name
   location            = var.location
   subnet_id           = module.network.subnet_id

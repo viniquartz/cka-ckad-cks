@@ -31,9 +31,16 @@ variable "sg_id" {
   default = ""
 }
 
-variable "vms" {
+variable "vm_cluster" {
   default = {
-    vm_name       = "cka-cluster",
-    vm_size       = "Standard_B2ms",
+    vm_name = "cka-cluster",
+    vm_size = "Standard_B2ms",
+  }
+}
+
+variable "vm_node" {
+  default = {
+    vm_name = "cka-node",
+    vm_size = "Standard_B2ms",
   }
 }
