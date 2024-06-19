@@ -6,6 +6,7 @@ pagar apagar todas as linhas
 
 ###### KUBECTL ######
 echo 'source <(kubectl completion bash)' >>~/.bashrc
+echo 'alias k="kubectl"' >>~/.bashrc
 echo 'alias kgp="kubectl get pods"' >>~/.bashrc
 echo 'alias kn="kubectl -n"' >>~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >>~/.bashrc

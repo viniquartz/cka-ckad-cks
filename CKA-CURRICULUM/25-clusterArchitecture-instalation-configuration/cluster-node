@@ -1,7 +1,9 @@
 -----------> SO <--------------
 Carregar dois modulos de kernel
 
-sudo swapoff -a
+ufw disable
+swapoff -a
+sed -i '/swap/d' /etc/fstab
 modprobe overlay
 modprobe br_netfilter
 
@@ -39,8 +41,8 @@ systemctl restart containerd
 apt-get update
 
 apt-get install -y apt-transport-https ca-certificates curl gpg
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
 
 apt-get update
 apt-get install -y kubelet kubeadm kubectl
@@ -48,7 +50,7 @@ apt-mark hold kubelet kubeadm kubectl
 
 -----------> Cluster <--------------
 
-kubeadm init
+kubeadm init --apiserver-advertise-address=10.0.1.4
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config

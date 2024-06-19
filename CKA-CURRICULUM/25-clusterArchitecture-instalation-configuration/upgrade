@@ -1,0 +1,63 @@
+DOC = <https://kubernetes.io/releases/version-skew-policy/>
+DOC = <https://v1-29.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/>
+
+# Como visualizar as versoes disponiveis
+
+```bash
+apt-cache madison kubeadm
+```
+
+# Upgrade no Control plane
+
+KUBEADM
+
+```bash
+apt install kubeadm="version"
+apt-mark hold kubeadm
+kubeadm upgrade plan
+kubeadm upgrade apply "version"
+```
+
+KUBELET e KUBECTL
+
+```bash
+apt install kubelet="version" kubectl="version"
+apt-mark hold kubelet kubectl
+systemctl deamon-reload
+systemctl restart kubelet
+```
+
+Conferir versao do control plane e node
+
+```bash
+kubectl get node -o wide
+```
+
+# Upgrade node
+
+Primeiro, precisamos garantir que nao vai estar rodando nada
+
+```bash
+kubectl drain "nome do node" --ignore-daemonsets
+```
+
+KUBEADM
+
+```bash
+apt install kubeadm="version"
+kubeadm upgrade node
+```
+
+KUBELET e KUBECTL
+
+```bash
+apt install kubelet="version" kubectl="version"
+systemctl deamon-reload
+systemctl restart kubelet
+```
+
+Deixar pronto para uso
+
+```bash
+kubectl uncordon node
+```
