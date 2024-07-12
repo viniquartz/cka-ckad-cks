@@ -33,16 +33,14 @@ apt-get install containerd -y
 
 mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
+    atualizar /etc/containerd/config.toml
+        SystemdCgroup = true
 systemctl status containerd.service
-systemctl restart containerd
+systemctl restart containerd.service
 
 -----------> kubeadm kubelet kubectl <--------------
 
-apt-get update
-
-apt-get install -y apt-transport-https ca-certificates curl gpg
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+Verificar na doc
 
 apt-get update
 apt-get install -y kubelet kubeadm kubectl
@@ -55,9 +53,16 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
+Node
+    cp -i /etc/kubernetes/kubelet.conf $HOME/.kube/config
+
 gerar token para adicionar node
 kubeadm token create --print-join-command
 
-->>>>>> Node
+For flannel to work correctly, you must pass --pod-network-cidr=10.244.0.0/16 to kubeadm init.
 
-kubeadm join 10.0.1.4:6443 --token 79uosy.6x0mejs1rje7gkcs \
+For Weave Verificar /etc/cni/net.d/ apagar o que nao for weave
+
+->>>>>> Node

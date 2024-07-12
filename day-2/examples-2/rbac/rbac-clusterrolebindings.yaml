@@ -9,4 +9,3 @@ roleRef:
 subjects:
   - kind: ServiceAccount #User, ServiceAccount, Group
     name: leitor-global
-    namespace: default

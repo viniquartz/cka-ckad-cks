@@ -80,3 +80,9 @@ LIMIT RANGE -> definir o minimo e o maximo que cada pod vai poder ter e limite p
 QUOTAS
 -> Controlar o uso geral de recursos dentro do namespace
 cpu, memory, storage, objetos de criacao
+
+STATIC PODS
+    Quando cria pods em /etc/kubernetes/manifests
+
+DAEMON SET
+    é como o kube proxy, é criado em todos os nodes

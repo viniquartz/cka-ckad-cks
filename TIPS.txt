@@ -1,4 +1,8 @@
 ###### VIM ########
+vim ~/.vimrc
+    set expandtab
+    set tabstop=2
+    set shiftwidth=2
 
 pagar apagar todas as linhas
     ESC -> :1,$d ENTER

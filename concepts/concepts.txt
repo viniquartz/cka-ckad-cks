@@ -17,12 +17,12 @@ KUBE-SCHEDULER
         rank nodes
 
 CONTROLLER-MANAGER
-    gerencia os container
+    gerencia os containers, gerenecia o deployment
 
 
 KUBE-APISERVER
     interage diretamente com o banco de dados   
-    principal componente de gestao
+    principal componente de gestao, é o coracao
         authenticate
         validate request
         retrieve data
@@ -30,5 +30,11 @@ KUBE-APISERVER
         kubelet
 
 KUBELET
+    é um serviço, que é executado em todos os nodes, é usado para se comunicar com a APISERVER
 
 KUBE-PROXY
+    comunicacao de rede entre controlplane e node, é um daemonset
+
+4 CONTAINERS EM KUBESYSTEM
+/etc/kubernetes/manifests
+ETCD, CONTROLLER MANAGER, APISERVER, SCHEDULER

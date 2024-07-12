@@ -15,7 +15,7 @@ Banco de dados -> baseado e chave e valor
                 - identificar chave do certificado key-file
 
     Definir a API e fazer o backuo
-        export ETCDCTL_API=3
+        export ETCDCTL_API=3 #etcdctl snapshot save --endpoints=https://127.0.0.1:2379,https://10.0.1.5:2379 --cacert=ca.crt --cert=server.crt --key=server.key /tmp/backup.db
         passar uma variavel de ambiente para o comando etcd
         ETCDCTL_API=3 etcdctl snapshot save #--help
         ETCDCTL_API=3 etcdctl snapshot save --endpoints= --cacert= --cert= --key= "/path/backup.db"

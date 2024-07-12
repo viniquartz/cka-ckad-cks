@@ -1,0 +1,36 @@
+IP do control plane e nodes
+IP da rede interna do k8s
+
+NETWORK
+Ser acessivel interno e externamente e tambem ser load balancer
+
+        ClusterIP: Default, endereço interno, só é acessivel dentro do cluster.
+
+        NodePort: ClusterIP + uma porta, com a porta pode ser acessado externamente 30000-32767
+
+        LoadBalancer: precisa de um agente externo, geralmente cloud manager(gerenciado pelo cloud provider) faz integracao para criar
+
+        ExternalName: cname para algo que existe fora do cluster
+
+NodePort type:
+    NodePort = porta do servico externo
+    port = porta do servico
+    targetPort = porta do app do pod
+
+30000 32767
+Usar o selector para ligar ao pod,depolyment
+
+ClusterIP type:
+    -> nao tem nodePort
+
+    ClusterIP = se o tipo nao for definido ele é o padrao de service
+    TargetPort = porta do app
+    Port = porta do servico
+
+LoadBalancer type:
+    -> Tem um ip externo
+
+    NodePort = porta do servico externo
+    port = porta do servico
+    targetPort = porta do app do pod
+

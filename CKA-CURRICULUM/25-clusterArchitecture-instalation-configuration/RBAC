@@ -1,0 +1,43 @@
+RBAC = Role based control
+    Autorizacao para todos os componentes
+    /etc/kubernetes/manifests/kube-apiserver.yaml
+        --authorization-mode
+
+tipos:
+    Roles = instanciado no namespace
+    ClusterRole = global
+
+OBS: Nao é possivel criar regras de negacao.
+
+    -> Role <-
+
+# Descobrir o grupo
+    kubectl api-resources -o wide
+    Nome do recurso e nao o nome do kind
+    Exemplo: -> kind: Secret
+             -> resource: secrets
+
+kubectl get role
+        describe
+
+# Precisamos de 3 coisas:
+    Kind: Role, RoleBinding | ClusterRole, ClusterRoleBinding
+apiGroups: [""] #CORE v1
+resources: list
+verbs: list
+
+# Criar e testar
+    -> kubectl create role leitor2 --verb get,watch,list --resource secrets,pods,jobs
+                    clusterrole
+
+    SERVICE ACCOUNT
+        - kubectl create sa leitor
+
+# testar acesso
+    kubectl auth can-i --help
+    -> kubectl auth can-i get secrets --as system:serviceaccount:default:leitor #default(namespace) #verbs = get,create #resource = #pods, jobs
+
+    ROLE BINDING
+        kubectl create rolebindings --help
+        - kubectl create rolebinding binding2 --role=leitor-secrets --serviceaccount:default:leitor
+        - kubectl create clusterrolebinding binding-cr --role=leitor-secrets --serviceaccount:default:leitor-global

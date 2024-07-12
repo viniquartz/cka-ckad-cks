@@ -251,3 +251,18 @@ LIMIT RANGE -> definir o minimo e o maximo que cada pod vai poder ter e limite p
 QUOTA
 kubectl create quota quota2 --hard pod=2,cpu=1,memory=1Gi --dry-run=client - o yaml
 kubectl describe resourcequotas quota
+
+LOGS
+kubectl logs pod-name -c container-name
+
+METRIC SERVER
+git clone https://github.com/kodekloudhub/kubernetes-metrics-server.git
+kubectl apply -f kubernetes-metrics-server/.
+    kubectl top pod
+    kubectl top node
+
+/var/log/pods
+/var/log/containers
+crictl ps + crictl logs
+tail -f /var/log/syslog | grep apiserver
+journalctl | grep apiserver
