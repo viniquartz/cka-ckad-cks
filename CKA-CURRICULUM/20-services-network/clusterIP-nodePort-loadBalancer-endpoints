@@ -34,3 +34,32 @@ LoadBalancer type:
     port = porta do servico
     targetPort = porta do app do pod
 
+utils commands to troubleshooting
+    ip a
+    ip link
+    dir(nslookup)
+    ip route
+    route
+    netstat -nplt
+
+svc
+    iptables -L -t nat | grep "svc"
+    cat /var/log/kube-proxy.log
+    cat /etc/kubernetes/manifests/kube-apiserver.yaml   | grep cluster-ip-range -> ip dos pods
+    kubectl logs -n kube-system kube-proxy-f75fl | grep proxy -> para ver o tipo de proxy
+
+network plugin
+    /opt/cni/bin
+    /etc/cni/net.d - configiracao de cada plugin, check the name and type
+    ip a show weave
+    kubectl logs <weave-pod-name> weave -n kube-system
+
+kubelet
+    ps -aux | grep kubelet
+    cat /var/lib/kubelet/config.yaml
+    cat /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf 
+    cat /etc/kubernetes/kubelet.conf
+
+DNS
+    Pod CoreDNS cat /etc/coredns/corefile
+    

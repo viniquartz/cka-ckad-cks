@@ -31,6 +31,8 @@ sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables ne
 runtime == containerd
 apt-get install containerd -y
 
+ps -p 1
+
 mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
     atualizar /etc/containerd/config.toml
@@ -66,3 +68,6 @@ For flannel to work correctly, you must pass --pod-network-cidr=10.244.0.0/16 to
 For Weave Verificar /etc/cni/net.d/ apagar o que nao for weave
 
 ->>>>>> Node
+
+https://www.youtube.com/watch?v=uUupRagM7m0&list=PL2We04F3Y_41jYdadX55fdJplDvgNGENo&ab_channel=KodeKloud
+https://github.com/kodekloudhub/certified-kubernetes-administrator-course?tab=readme-ov-file
