@@ -1,0 +1,51 @@
+docker é um runtime
+
+pod é a menor entidade, vai ser onde o container onde vai rodar
+amontando de cgroups e linux namespaces
+
+multi containers no mesmo pod compartilha mema rede e mesmo volume. e sempre vao rodar no mesmo node
+
+docker  ENTRYPOINT  kubernetes COMMAND
+        CMD                    ARGS
+
+ENTRYPOINT é o que vai segurar a execucao
+CMD é os argumentos
+
+# conceitos
+
+## Docker multi-stage
+-> permite dividir o processo de criacao da imagem
+-> deixa uma imagem mais limpa
+EX: um camada de build e outra apenas para rodar a aplicacao.
+
+## Distroless
+-> trabalhar sem uma distro por tras
+-> baseado na linguagem de programacao
+    # imagens seguras e sem distro na chainguard
+
+# Tools
+
+## vulnerabilidades
+Docker Scout = scam de vulnerabilidades
+Trivy = scam de vulnerabilidades
+
+## analise
+Diver = ferramenta de analise de imagem
+
+## criar imagens
+Melange
+    -> criar uma imagem que seja especifica para nossa aplicacao
+
+## verificar qualidade de imagens
+hadolint
+    -> ferramenta de linting para dockerfile
+
+## assinar imagem
+cosign
+    ->
+
+
+# Commands
+docker history "image_name"
+    -> para ver as camadas da image_name
+
