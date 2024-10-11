@@ -86,3 +86,14 @@ STATIC PODS
 
 DAEMON SET
     é como o kube proxy, é criado em todos os nodes
+
+
+
+=======================
+Kyverno
+        -> Gerenciamento de politicas
+                validate
+                mutate
+                create
+                cleanup
+
